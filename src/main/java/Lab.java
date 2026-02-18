@@ -40,13 +40,53 @@ public class Lab {
 
     public void createSong(Song song)  {
         //write jdbc code here
+        
+        try {
+                Connection connection = ConnectionUtil.getConnection();
+        
+                String sql = "INSERT INTO songs (title, artist) VALUES ('" 
+                             + song.getTitle() + "', '" 
+                             + song.getArtist() + "')";
+        
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(sql);
+        
+        } catch (SQLException e) {
+                System.out.println("createSong: " + e.getMessage());
+         }
     }
 
     public List<Song> getAllSongs(){
         List<Song> songs = new ArrayList<>();
 
         //write jdbc code here
-
-        return songs;
+        
+        
+        try {
+            Connection connection = ConnectionUtil.getConnection();
+    
+            String sql = "SELECT * FROM songs";
+    
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+    
+            while (rs.next()) {
+                Song s = new Song(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getString("artist")
+                );
+                songs.add(s);
+            }
+    
+         } catch (SQLException e) {
+                System.out.println("getAllSongs: " + e.getMessage());
+         }
+        
+         return songs;
     }
+    
+
+        
+    
 }
